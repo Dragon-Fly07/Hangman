@@ -1,10 +1,12 @@
 from Window.mainmenu import mainmenu
 from Window.window import mainwindow
+from Window.gameover import gameover
 import pygame
 
 # position of text
 ypos = 330
 ypos_gameplay = 2000
+ypos_game_over = 750
 
 window = pygame.display.set_mode((1220, 660))
 pygame.display.set_caption("Hangman")
@@ -18,11 +20,13 @@ game_play_fade_out = False
 
 # temp vars
 input_string = []
+man_order = []
+component = ["head", "body", "arm-left", "arm-right", "leg-left", "leg-right"]
 
 while running:
     word = "MISSISIPPI"
     mainmenu_window = mainmenu(window, (660, ypos)) 
-    main_window = mainwindow(window, (300, ypos_gameplay), word, input_string)
+    main_window = mainwindow(window, (300, ypos_gameplay), word, input_string, man_order, component)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -53,12 +57,22 @@ while running:
             game_play_fade_in = True
             game_play_fade_out = False
             input_string = []
+            man_order = []
+            component = ["head", "body", "arm-left", "arm-right", "leg-left", "leg-right"]
+
+    if not component:
+        if ypos_gameplay != -500:
+            ypos_gameplay -= 10
+            if ypos_game_over != 330:
+                ypos_game_over -= 10
 
     main_window.draw_input()
     main_window.draw_text()
     main_window.render_gallows()
+    main_window.draw_man()
     mainmenu_window.build()
-    
+    gameover(window, word, (660, ypos_game_over)).build()
+
     pygame.display.flip()
 
 pygame.quit()

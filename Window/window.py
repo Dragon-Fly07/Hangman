@@ -4,11 +4,13 @@ import pygame
 
 
 class mainwindow:
-    def __init__(self, target_window: pygame.Surface, position:tuple, word:str, input_string: list):
+    def __init__(self, target_window: pygame.Surface, position:tuple, word:str, input_string: list, order:list, components):
         self.target_window = target_window
         self.position = position
         self.word = word
         self.input_string = input_string
+        self.components = components 
+        self.order = order
     
     def draw_input(self):
         for i in range(len(self.word)):
@@ -47,6 +49,11 @@ class mainwindow:
         if event_key in key_map:
             if key_map[event_key] in self.word:
                 self.input_string.append(key_map[event_key])
+            else:
+               self.order.append(self.components.pop(0)) 
+    
+    def draw_man(self):
+        Man(self.target_window, self.order, self.position).build()
             
     def draw_text(self):
         font = Assets.title_font
